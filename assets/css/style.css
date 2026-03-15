@@ -2274,3 +2274,89 @@ textarea.form-input::-webkit-resizer { display: none; }
   animation: fadeInPage 1s ease forwards;
   animation-delay: 1s;
 }
+/*-----------------------------------*\
+  #MOBILE FIXES
+\*-----------------------------------*/
+
+@media (max-width: 579px) {
+
+  /* Fix sidebar photo size */
+  .avatar-box img {
+    width: 80px !important;
+  }
+
+  /* Fix navbar 5 tabs on mobile */
+  .navbar-list {
+    padding: 0 2px;
+    gap: 0;
+  }
+
+  .navbar-link {
+    padding: 15px 4px !important;
+    font-size: 9px !important;
+    letter-spacing: 0;
+  }
+
+  /* Fix extra black space at bottom */
+  main {
+    margin-bottom: 60px !important;
+  }
+
+  /* Fix contact form button not visible */
+  .form-btn {
+    margin-bottom: 70px;
+  }
+
+  /* Fix article padding on mobile */
+  article {
+    padding: 20px 15px !important;
+  }
+
+  /* Fix sidebar on mobile */
+  .sidebar {
+    padding: 15px !important;
+    margin: 0 2px 10px 2px !important;
+  }
+
+  /* Fix project images height */
+  .project-img {
+    height: 180px !important;
+  }
+
+  /* Fix availability badge on mobile */
+  .availability-badge {
+    padding: 10px 14px !important;
+    gap: 10px !important;
+  }
+
+  .badge-text strong {
+    font-size: 11px !important;
+  }
+
+  /* Fix certifications on mobile */
+  .certifications-item {
+    padding: 12px 14px !important;
+  }
+
+  .certifications-content h5 {
+    font-size: 12px !important;
+  }
+
+  /* Fix languages on mobile */
+  .languages-level {
+    font-size: 9px !important;
+    padding: 2px 6px !important;
+  }
+
+  /* Fix tech badges on mobile */
+  .tech-badge {
+    padding: 8px 12px !important;
+    font-size: 12px !important;
+  }
+
+  /* Remove extra bottom space */
+  body {
+    padding-bottom: 0 !important;
+  }
+
+}
