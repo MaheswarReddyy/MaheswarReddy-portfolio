@@ -1,454 +1,244 @@
 'use strict';
 
-/*-----------------------------------*\
-  #UTILITY
-\*-----------------------------------*/
+/* =============================================
+   GOGULA NAGA MAHESWAR REDDY — PORTFOLIO JS
+   ============================================= */
 
-// toggle function
-const elementToggleFunc = function (elem) {
-  elem.classList.toggle("active");
-}
+/* ---------- PARTICLES ---------- */
+(function createParticles() {
+  const container = document.getElementById('particles');
+  if (!container) return;
+  const count = window.innerWidth < 768 ? 15 : 30;
+  for (let i = 0; i < count; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.cssText = `
+      left: ${Math.random() * 100}%;
+      width: ${Math.random() * 3 + 1}px;
+      height: ${Math.random() * 3 + 1}px;
+      animation-delay: ${Math.random() * 10}s;
+      animation-duration: ${Math.random() * 15 + 10}s;
+      opacity: ${Math.random() * 0.5 + 0.1};
+    `;
+    container.appendChild(p);
+  }
+})();
 
+/* ---------- NAVBAR ---------- */
+const navbar = document.getElementById('navbar');
+const hamburger = document.getElementById('hamburger');
+const navLinks = document.getElementById('navLinks');
 
-/*-----------------------------------*\
-  #SIDEBAR TOGGLE
-\*-----------------------------------*/
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 60) {
+    navbar.classList.add('scrolled');
+  } else {
+    navbar.classList.remove('scrolled');
+  }
+  updateActiveNav();
+  toggleBackToTop();
+}, { passive: true });
 
-const sidebar = document.querySelector("[data-sidebar]");
-const sidebarBtn = document.querySelector("[data-sidebar-btn]");
+hamburger.addEventListener('click', () => {
+  hamburger.classList.toggle('open');
+  navLinks.classList.toggle('open');
+});
 
-if (sidebarBtn) {
-  sidebarBtn.addEventListener("click", function () {
-    elementToggleFunc(sidebar);
+// Close mobile menu when link clicked
+navLinks.querySelectorAll('.nav-link').forEach(link => {
+  link.addEventListener('click', () => {
+    hamburger.classList.remove('open');
+    navLinks.classList.remove('open');
   });
-}
+});
 
-
-/*-----------------------------------*\
-  #PORTFOLIO FILTER
-\*-----------------------------------*/
-
-const select = document.querySelector("[data-select]");
-const selectItems = document.querySelectorAll("[data-select-item]");
-const selectValue = document.querySelector("[data-selecct-value]");
-const filterBtn = document.querySelectorAll("[data-filter-btn]");
-const filterItems = document.querySelectorAll("[data-filter-item]");
-
-if (select) {
-  select.addEventListener("click", function () {
-    elementToggleFunc(this);
-  });
-}
-
-// filter function
-const filterFunc = function (selectedValue) {
-  filterItems.forEach(item => {
-    if (selectedValue === "all") {
-      item.classList.add("active");
-    } else if (selectedValue === item.dataset.category) {
-      item.classList.add("active");
-    } else {
-      item.classList.remove("active");
+/* ---------- ACTIVE NAV ON SCROLL ---------- */
+function updateActiveNav() {
+  const sections = document.querySelectorAll('section[id]');
+  const scrollY = window.scrollY + 100;
+  sections.forEach(section => {
+    const top = section.offsetTop;
+    const height = section.offsetHeight;
+    const id = section.getAttribute('id');
+    const link = document.querySelector(`.nav-link[href="#${id}"]`);
+    if (link) {
+      if (scrollY >= top && scrollY < top + height) {
+        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+      }
     }
   });
 }
 
-// SELECT DROPDOWN FILTER
-selectItems.forEach(item => {
-  item.addEventListener("click", function () {
-    let selectedValue = this.innerText.toLowerCase();
-    if (selectValue) selectValue.innerText = this.innerText;
-    elementToggleFunc(select);
-    filterFunc(selectedValue);
-  });
-});
-
-// FILTER BUTTONS
-let lastClickedBtn = filterBtn[0];
-
-filterBtn.forEach(btn => {
-  btn.addEventListener("click", function () {
-    let selectedValue = this.innerText.toLowerCase();
-    if (selectValue) selectValue.innerText = this.innerText;
-    filterFunc(selectedValue);
-    lastClickedBtn.classList.remove("active");
-    this.classList.add("active");
-    lastClickedBtn = this;
-  });
-});
-
-
-/*-----------------------------------*\
-  #CONTACT FORM
-\*-----------------------------------*/
-
-const form = document.querySelector("[data-form]");
-const formInputs = document.querySelectorAll("[data-form-input]");
-const formBtn = document.querySelector("[data-form-btn]");
-
-formInputs.forEach(input => {
-  input.addEventListener("input", function () {
-    if (form.checkValidity()) {
-      formBtn.removeAttribute("disabled");
-    } else {
-      formBtn.setAttribute("disabled", "");
+/* ---------- SMOOTH SCROLL ---------- */
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', e => {
+    const href = anchor.getAttribute('href');
+    if (href === '#') return;
+    const target = document.querySelector(href);
+    if (target) {
+      e.preventDefault();
+      const top = target.offsetTop - 70;
+      window.scrollTo({ top, behavior: 'smooth' });
     }
   });
 });
 
-
-/*-----------------------------------*\
-  #PAGE NAVIGATION
-  Smooth fade transition between
-  sections when nav links clicked
-\*-----------------------------------*/
-
-const navigationLinks = document.querySelectorAll("[data-nav-link]");
-const pages = document.querySelectorAll("[data-page]");
-
-navigationLinks.forEach(link => {
-  link.addEventListener("click", function () {
-
-    pages.forEach(page => {
-
-      if (this.innerHTML.toLowerCase() === page.dataset.page) {
-
-        // Fade out first
-        page.style.opacity = "0";
-        page.style.transform = "translateY(10px)";
-        page.classList.add("active");
-        link.classList.add("active");
-        window.scrollTo(0, 0);
-
-        // Fade in after small delay
-        setTimeout(() => {
-          page.style.transition = "opacity 0.4s ease, transform 0.4s ease";
-          page.style.opacity = "1";
-          page.style.transform = "translateY(0)";
-
-          // Trigger scroll reveal for newly visible section
-          const revealEls = page.querySelectorAll('.reveal:not(.visible)');
-          revealEls.forEach(el => {
-            setTimeout(() => el.classList.add('visible'), 100);
-          });
-
-          // Re-animate skill bars when resume tab opened
-          if (page.dataset.page === "resume") {
-            triggerSkillBars();
-          }
-
-        }, 50);
-
-      } else {
-        page.classList.remove("active");
-        page.style.opacity = "";
-        page.style.transform = "";
-        page.style.transition = "";
-        link.classList.remove("active");
-      }
-
-    });
-
-  });
-});
-
-
-/*-----------------------------------*\
-  #SCROLL REVEAL ANIMATION
-  Reveals elements with fade+slide
-  as they enter the viewport
-\*-----------------------------------*/
-
-const revealElements = () => {
-
-  // Elements to animate on scroll
-  const selectors = [
-    '.about-text p',
-    '.tech-stack span',
-    '.certifications-item',
-    '.timeline-item',
-    '.skills-item',
-    '.project-item',
-    '.contact-form',
-    '.mapbox'
-  ];
-
-  selectors.forEach(selector => {
-    document.querySelectorAll(selector).forEach((el, index) => {
-      el.classList.add('reveal');
-      // Stagger delay for siblings
-      if (index > 0 && index <= 5) {
-        el.classList.add(`reveal-delay-${index}`);
-      }
-    });
-  });
-
-  // Watch elements entering viewport
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        observer.unobserve(entry.target);
-      }
-    });
-  }, {
-    threshold: 0.15,
-    rootMargin: '0px 0px -50px 0px'
-  });
-
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-};
-
-
-/*-----------------------------------*\
-  #TYPING ANIMATION
-  Cycles through role titles with
-  typewriter effect in sidebar
-\*-----------------------------------*/
-
-const initTypingAnimation = () => {
-
-  const titleEl = document.querySelector('.info-content .title');
-  if (!titleEl) return;
-
+/* ---------- TYPING ANIMATION ---------- */
+(function initTyping() {
+  const el = document.getElementById('typingText');
+  if (!el) return;
   const texts = [
     'Full Stack Developer',
     'Cloud Enthusiast',
     'Problem Solver',
-    'KL University Student'
+    'AWS Practitioner',
+    'Node.js Developer',
+    'CS Student @ KL University'
   ];
+  let textIdx = 0, charIdx = 0, isDeleting = false;
 
-  let textIndex = 0;
-  let charIndex = 0;
-  let isDeleting = false;
-
-  // Add blinking cursor
-  titleEl.classList.add('typing-cursor');
-
-  const type = () => {
-    const currentText = texts[textIndex];
-
+  function type() {
+    const current = texts[textIdx];
     if (isDeleting) {
-      titleEl.textContent = currentText.substring(0, charIndex - 1);
-      charIndex--;
+      el.textContent = current.substring(0, charIdx - 1);
+      charIdx--;
     } else {
-      titleEl.textContent = currentText.substring(0, charIndex + 1);
-      charIndex++;
+      el.textContent = current.substring(0, charIdx + 1);
+      charIdx++;
     }
-
-    let speed = isDeleting ? 60 : 100;
-
-    if (!isDeleting && charIndex === currentText.length) {
-      speed = 1800; // Pause before deleting
+    let speed = isDeleting ? 50 : 90;
+    if (!isDeleting && charIdx === current.length) {
+      speed = 2000;
       isDeleting = true;
-    } else if (isDeleting && charIndex === 0) {
+    } else if (isDeleting && charIdx === 0) {
       isDeleting = false;
-      textIndex = (textIndex + 1) % texts.length;
-      speed = 400; // Pause before typing next
+      textIdx = (textIdx + 1) % texts.length;
+      speed = 400;
     }
-
     setTimeout(type, speed);
-  };
+  }
+  setTimeout(type, 800);
+})();
 
-  setTimeout(type, 1000);
-};
+/* ---------- SCROLL REVEAL ---------- */
+(function initReveal() {
+  const elements = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        // Stagger children
+        const siblings = entry.target.parentElement.querySelectorAll('.reveal');
+        const idx = Array.from(siblings).indexOf(entry.target);
+        setTimeout(() => {
+          entry.target.classList.add('visible');
+        }, Math.min(idx * 80, 400));
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -50px 0px' });
+  elements.forEach(el => observer.observe(el));
+})();
 
-
-/*-----------------------------------*\
-  #SKILL BAR ANIMATION
-  Animates progress bars from 0
-  to target width when visible
-\*-----------------------------------*/
-
-const initSkillBars = () => {
-
-  const skillFills = document.querySelectorAll('.skill-progress-fill');
-
-  skillFills.forEach(fill => {
-    // Save original width as CSS variable
-    const originalWidth = fill.style.width;
-    fill.style.setProperty('--target-width', originalWidth);
-    fill.style.width = '0%';
-  });
-
-};
-
-// Trigger skill bar animation (called on resume tab open)
-const triggerSkillBars = () => {
-  const skillFills = document.querySelectorAll('.skill-progress-fill');
-  skillFills.forEach(fill => {
-    setTimeout(() => {
-      fill.classList.add('animate');
-    }, 200);
-  });
-};
-
-// Also trigger on scroll via IntersectionObserver
-const observeSkillBars = () => {
-  const skillFills = document.querySelectorAll('.skill-progress-fill');
-
-  const skillObserver = new IntersectionObserver((entries) => {
+/* ---------- SKILL BAR ANIMATION ---------- */
+(function initSkillBars() {
+  const fills = document.querySelectorAll('.skill-bar-fill');
+  const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
+        const width = entry.target.getAttribute('data-width');
         setTimeout(() => {
-          entry.target.classList.add('animate');
+          entry.target.style.width = width + '%';
         }, 200);
-        skillObserver.unobserve(entry.target);
+        observer.unobserve(entry.target);
       }
     });
   }, { threshold: 0.3 });
+  fills.forEach(fill => observer.observe(fill));
+})();
 
-  skillFills.forEach(fill => skillObserver.observe(fill));
-};
-
-
-/*-----------------------------------*\
-  #STICKY NAVBAR
-  Adds scrolled class for enhanced
-  blur/shadow when scrolling
-\*-----------------------------------*/
-
-const initStickyNavbar = () => {
-
-  const navbar = document.querySelector('.navbar');
-  if (!navbar) return;
-
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 50) {
-      navbar.classList.add('scrolled');
-    } else {
-      navbar.classList.remove('scrolled');
-    }
-  }, { passive: true });
-
-};
-
-
-/*-----------------------------------*\
-  #PROJECT CARD TILT
-  Subtle 3D perspective tilt effect
-  on project cards when hovering
-\*-----------------------------------*/
-
-const initCardTilt = () => {
-
-  const cards = document.querySelectorAll('.project-item');
-
-  cards.forEach(card => {
-
-    card.addEventListener('mousemove', (e) => {
-      const rect = card.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      const centerX = rect.width / 2;
-      const centerY = rect.height / 2;
-
-      // Max 6 degrees tilt
-      const tiltX = ((y - centerY) / centerY) * 6;
-      const tiltY = ((x - centerX) / centerX) * -6;
-
-      card.style.transform =
-        `translateY(-8px) rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
-      card.style.transition = 'transform 0.1s ease';
-    });
-
-    card.addEventListener('mouseleave', () => {
-      card.style.transform = 'translateY(0) rotateX(0) rotateY(0)';
-      card.style.transition = 'transform 0.4s ease';
-    });
-
+/* ---------- PROJECT CARD TILT ---------- */
+document.querySelectorAll('.project-card').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const rect = card.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width - 0.5) * 8;
+    const y = ((e.clientY - rect.top) / rect.height - 0.5) * -8;
+    card.style.transform = `translateY(-8px) rotateX(${y}deg) rotateY(${x}deg)`;
+    card.style.transition = 'transform 0.1s ease';
   });
-
-};
-
-
-/*-----------------------------------*\
-  #BUTTON RIPPLE EFFECT
-  Gold ripple wave on button click
-  for tactile visual feedback
-\*-----------------------------------*/
-
-const initRippleEffect = () => {
-
-  const buttons = document.querySelectorAll('.download-btn, .form-btn');
-
-  // Inject ripple keyframe once
-  const rippleStyle = document.createElement('style');
-  rippleStyle.textContent = `
-    @keyframes rippleAnim {
-      to {
-        transform: scale(2.5);
-        opacity: 0;
-      }
-    }
-  `;
-  document.head.appendChild(rippleStyle);
-
-  buttons.forEach(btn => {
-    btn.addEventListener('click', (e) => {
-
-      // Remove any existing ripple
-      const existingRipple = btn.querySelector('.ripple');
-      if (existingRipple) existingRipple.remove();
-
-      const ripple = document.createElement('span');
-      ripple.classList.add('ripple');
-
-      const rect = btn.getBoundingClientRect();
-      const size = Math.max(rect.width, rect.height);
-      const x = e.clientX - rect.left - size / 2;
-      const y = e.clientY - rect.top - size / 2;
-
-      ripple.style.cssText = `
-        position: absolute;
-        width: ${size}px;
-        height: ${size}px;
-        left: ${x}px;
-        top: ${y}px;
-        background: hsla(45, 100%, 72%, 0.3);
-        border-radius: 50%;
-        transform: scale(0);
-        animation: rippleAnim 0.6s ease-out forwards;
-        pointer-events: none;
-      `;
-
-      btn.style.position = 'relative';
-      btn.style.overflow = 'hidden';
-      btn.appendChild(ripple);
-
-      // Clean up after animation
-      setTimeout(() => ripple.remove(), 700);
-    });
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = '';
+    card.style.transition = 'transform 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease';
   });
+});
 
-};
+/* ---------- BACK TO TOP ---------- */
+const backToTop = document.getElementById('backToTop');
+function toggleBackToTop() {
+  if (window.scrollY > 400) {
+    backToTop.classList.add('visible');
+  } else {
+    backToTop.classList.remove('visible');
+  }
+}
+backToTop.addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
 
+/* ---------- CONTACT FORM ---------- */
+const form = document.getElementById('contactForm');
+if (form) {
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const btn = form.querySelector('button[type="submit"]');
+    const original = btn.textContent;
+    btn.textContent = 'Message Sent! ✓';
+    btn.style.background = '#22c55e';
+    btn.disabled = true;
+    setTimeout(() => {
+      btn.textContent = original;
+      btn.style.background = '';
+      btn.disabled = false;
+      form.reset();
+    }, 3000);
+  });
+}
 
-/*-----------------------------------*\
-  #INIT ALL EFFECTS
-  Initialize everything after
-  the DOM is fully loaded
-\*-----------------------------------*/
+/* ---------- RIPPLE EFFECT ON BUTTONS ---------- */
+document.querySelectorAll('.btn, .project-btn, .cert-card').forEach(el => {
+  el.addEventListener('click', function(e) {
+    const ripple = document.createElement('span');
+    const rect = this.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    ripple.style.cssText = `
+      position:absolute;
+      width:${size}px;height:${size}px;
+      left:${e.clientX-rect.left-size/2}px;
+      top:${e.clientY-rect.top-size/2}px;
+      background:rgba(255,255,255,0.2);
+      border-radius:50%;
+      transform:scale(0);
+      animation:ripple 0.6s ease-out forwards;
+      pointer-events:none;
+    `;
+    const prev = this.style.position;
+    if (!prev || prev === 'static') this.style.position = 'relative';
+    this.style.overflow = 'hidden';
+    this.appendChild(ripple);
+    setTimeout(() => ripple.remove(), 700);
+  });
+});
 
+// Inject ripple keyframe
+const style = document.createElement('style');
+style.textContent = `@keyframes ripple { to { transform:scale(2.5); opacity:0; } }`;
+document.head.appendChild(style);
+
+/* ---------- PAGE LOAD ANIMATION ---------- */
 document.addEventListener('DOMContentLoaded', () => {
-
-  // Core interactions
-  revealElements();
-  initTypingAnimation();
-  initSkillBars();
-  observeSkillBars();
-  initStickyNavbar();
-  initCardTilt();
-  initRippleEffect();
-
-  // Trigger reveal for initially visible elements
+  document.body.style.opacity = '0';
   setTimeout(() => {
-    const activeSection = document.querySelector('[data-page].active');
-    if (activeSection) {
-      activeSection.querySelectorAll('.reveal').forEach(el => {
-        el.classList.add('visible');
-      });
-    }
-  }, 300);
-
+    document.body.style.transition = 'opacity 0.5s ease';
+    document.body.style.opacity = '1';
+  }, 50);
 });

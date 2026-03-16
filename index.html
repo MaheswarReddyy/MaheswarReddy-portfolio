@@ -1,579 +1,429 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Loading...</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700;900&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    :root {
+      --gold: #ffd700;
+      --gold-light: #ffe566;
+      --bg: #050508;
+    }
 
-<title>Gogula Naga Maheswar Reddy | Portfolio</title>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg);
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+    }
 
-<link rel="stylesheet" href="./assets/css/style.css">
+    /* ===== PRELOADER WRAPPER ===== */
+    #preloader {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    /* ===== GRID LINES BACKGROUND ===== */
+    .grid-bg {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,215,0,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,215,0,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      animation: gridPulse 4s ease-in-out infinite;
+    }
+    @keyframes gridPulse {
+      0%,100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
 
+    /* ===== RADIAL GLOW ===== */
+    .glow-orb {
+      position: absolute;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,215,0,0.08) 0%, transparent 70%);
+      animation: orbPulse 3s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes orbPulse {
+      0%,100% { transform: scale(1); opacity: 0.6; }
+      50% { transform: scale(1.2); opacity: 1; }
+    }
+
+    /* ===== CORNER DECORATIONS ===== */
+    .corner {
+      position: absolute;
+      width: 60px; height: 60px;
+      opacity: 0;
+      animation: cornerFade 0.6s ease forwards;
+    }
+    .corner::before, .corner::after {
+      content: '';
+      position: absolute;
+      background: var(--gold);
+    }
+    .corner::before { width: 100%; height: 2px; top: 0; left: 0; }
+    .corner::after  { width: 2px; height: 100%; top: 0; left: 0; }
+    .corner.tl { top: 24px; left: 24px; animation-delay: 0.2s; }
+    .corner.tr { top: 24px; right: 24px; transform: scaleX(-1); animation-delay: 0.3s; }
+    .corner.bl { bottom: 24px; left: 24px; transform: scaleY(-1); animation-delay: 0.4s; }
+    .corner.br { bottom: 24px; right: 24px; transform: scale(-1); animation-delay: 0.5s; }
+    @keyframes cornerFade { to { opacity: 1; } }
+
+    /* ===== SCANNING LINE ===== */
+    .scan-line {
+      position: absolute;
+      left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      animation: scanDown 2s ease-in-out infinite;
+      opacity: 0.4;
+    }
+    @keyframes scanDown {
+      0%   { top: -2px; opacity: 0; }
+      10%  { opacity: 0.4; }
+      90%  { opacity: 0.4; }
+      100% { top: 100vh; opacity: 0; }
+    }
+
+    /* ===== MAIN CONTENT ===== */
+    .preloader-content {
+      position: relative; z-index: 2;
+      text-align: center;
+      display: flex; flex-direction: column;
+      align-items: center; gap: 0;
+    }
+
+    /* ===== LOGO MONOGRAM ===== */
+    .logo-wrap {
+      position: relative;
+      margin-bottom: 32px;
+      opacity: 0;
+      animation: logoReveal 0.8s cubic-bezier(0.34,1.56,0.64,1) 0.4s forwards;
+    }
+    @keyframes logoReveal {
+      from { opacity:0; transform: scale(0.5) rotate(-10deg); }
+      to   { opacity:1; transform: scale(1) rotate(0deg); }
+    }
+    .logo-hexagon {
+      width: 90px; height: 90px;
+      background: linear-gradient(135deg, rgba(255,215,0,0.15), rgba(255,215,0,0.05));
+      border: 2px solid var(--gold);
+      border-radius: 20px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 0 40px rgba(255,215,0,0.3), inset 0 0 20px rgba(255,215,0,0.05);
+      animation: logoGlow 2s ease-in-out infinite 1.2s;
+    }
+    @keyframes logoGlow {
+      0%,100% { box-shadow: 0 0 40px rgba(255,215,0,0.3), inset 0 0 20px rgba(255,215,0,0.05); }
+      50%      { box-shadow: 0 0 60px rgba(255,215,0,0.5), inset 0 0 30px rgba(255,215,0,0.1); }
+    }
+    .logo-text {
+      font-family: 'Fira Code', monospace;
+      font-size: 2rem; font-weight: 600;
+      color: var(--gold);
+    }
+    .logo-ring {
+      position: absolute; inset: -12px;
+      border-radius: 28px;
+      border: 1px solid rgba(255,215,0,0.2);
+      animation: ringRotate 6s linear infinite;
+    }
+    .logo-ring::after {
+      content: '';
+      position: absolute;
+      top: -4px; left: 50%;
+      transform: translateX(-50%);
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 10px var(--gold);
+    }
+    @keyframes ringRotate { to { transform: rotate(360deg); } }
+
+    /* ===== NAME ===== */
+    .preloader-name {
+      font-size: clamp(1.6rem, 5vw, 2.8rem);
+      font-weight: 900;
+      letter-spacing: -1px;
+      line-height: 1.1;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+    .name-line {
+      display: block;
+      transform: translateY(100%);
+      animation: nameSlide 0.7s cubic-bezier(0.4,0,0.2,1) forwards;
+    }
+    .name-line:nth-child(1) { animation-delay: 0.9s; color: #e8e8f0; }
+    .name-line:nth-child(2) {
+      animation-delay: 1.0s;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    @keyframes nameSlide {
+      from { transform: translateY(100%); opacity: 0; }
+      to   { transform: translateY(0); opacity: 1; }
+    }
+
+    /* ===== ROLE TAG ===== */
+    .role-tag {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+      color: rgba(255,215,0,0.7);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 48px;
+      opacity: 0;
+      animation: fadeUp 0.6s ease 1.3s forwards;
+    }
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(10px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+
+    /* ===== PROGRESS BAR ===== */
+    .progress-wrap {
+      width: min(380px, 80vw);
+      opacity: 0;
+      animation: fadeUp 0.5s ease 1.5s forwards;
+    }
+    .progress-header {
+      display: flex; justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .progress-label {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.7rem; color: rgba(255,215,0,0.5);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .progress-pct {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.7rem; color: var(--gold);
+      font-weight: 600;
+    }
+    .progress-track {
+      height: 3px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 2px;
+      overflow: visible;
+      position: relative;
+      margin-bottom: 16px;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--gold-light), var(--gold));
+      border-radius: 2px;
+      transition: width 0.1s linear;
+      position: relative;
+    }
+    .progress-fill::after {
+      content: '';
+      position: absolute;
+      right: -1px; top: 50%;
+      transform: translateY(-50%);
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 10px var(--gold), 0 0 20px rgba(255,215,0,0.5);
+    }
+    .progress-steps {
+      display: flex; gap: 6px; flex-wrap: wrap; justify-content: center;
+    }
+    .step-tag {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.65rem; color: rgba(255,255,255,0.2);
+      padding: 3px 10px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 4px;
+      transition: all 0.3s ease;
+    }
+    .step-tag.active {
+      color: var(--gold);
+      border-color: rgba(255,215,0,0.4);
+      background: rgba(255,215,0,0.06);
+      box-shadow: 0 0 8px rgba(255,215,0,0.15);
+    }
+
+    /* ===== FLOATING PARTICLES ===== */
+    .float-particles {
+      position: absolute; inset: 0;
+      pointer-events: none; overflow: hidden;
+    }
+    .fp {
+      position: absolute;
+      border-radius: 50%;
+      background: var(--gold);
+      animation: floatUp linear infinite;
+    }
+    @keyframes floatUp {
+      0%   { transform: translateY(100vh) scale(0); opacity:0; }
+      10%  { opacity: 0.7; }
+      90%  { opacity: 0.3; }
+      100% { transform: translateY(-100px) scale(1); opacity:0; }
+    }
+
+    /* ===== REVEAL OVERLAY ===== */
+    .reveal-overlay {
+      position: fixed; inset: 0; z-index: 10000;
+      pointer-events: none;
+      display: grid; grid-template-columns: 1fr 1fr;
+    }
+    .reveal-panel {
+      background: var(--bg);
+      transition: transform 0.7s cubic-bezier(0.76,0,0.24,1);
+    }
+    .reveal-panel.left  { transform-origin: left; }
+    .reveal-panel.right { transform-origin: right; }
+    .reveal-overlay.open .reveal-panel.left  { transform: scaleX(0); }
+    .reveal-overlay.open .reveal-panel.right { transform: scaleX(0); }
+
+    /* ===== EXIT ANIMATION ===== */
+    #preloader.exit {
+      animation: preloaderExit 0.8s cubic-bezier(0.76,0,0.24,1) forwards;
+    }
+    @keyframes preloaderExit {
+      0%   { opacity:1; transform:scale(1); }
+      100% { opacity:0; transform:scale(1.05); }
+    }
+  </style>
 </head>
-
 <body>
 
-<main>
-
-<aside class="sidebar" data-sidebar>
-
-<div class="sidebar-info">
-
-<figure class="avatar-box">
-<img src="./assets/images/Mahi00.png" width="120">
-</figure>
-
-<div class="info-content">
-
-<h1 class="name">Gogula Naga Maheswar Reddy</h1>
-
-<p class="title">Full Stack Developer | Exploring Cloud Technologies</p>
-
+<!-- REVEAL OVERLAY -->
+<div class="reveal-overlay" id="revealOverlay">
+  <div class="reveal-panel left"></div>
+  <div class="reveal-panel right"></div>
 </div>
 
-<button class="info_more-btn" data-sidebar-btn>
-<span>Show Contacts</span>
-</button>
+<!-- PRELOADER -->
+<div id="preloader">
+  <div class="grid-bg"></div>
+  <div class="glow-orb"></div>
+  <div class="scan-line"></div>
+  <div class="float-particles" id="floatParticles"></div>
 
-</div>
+  <!-- Corner decorations -->
+  <div class="corner tl"></div>
+  <div class="corner tr"></div>
+  <div class="corner bl"></div>
+  <div class="corner br"></div>
 
-<div class="sidebar-info_more">
+  <div class="preloader-content">
+    <!-- Logo -->
+    <div class="logo-wrap">
+      <div class="logo-hexagon">
+        <span class="logo-text">MR</span>
+      </div>
+      <div class="logo-ring"></div>
+    </div>
 
-<div class="separator"></div>
+    <!-- Name -->
+    <h1 class="preloader-name">
+      <span class="name-line">Gogula Naga</span>
+      <span class="name-line">Maheswar Reddy</span>
+    </h1>
 
-<a href="./MaheswarReddy_Resume.pdf" download class="download-btn">
-Download Resume
-</a>
+    <!-- Role -->
+    <p class="role-tag">Full Stack Developer &nbsp;·&nbsp; Cloud Enthusiast</p>
 
-<div class="separator"></div>
-
-<a href="https://www.linkedin.com/in/gogula-naga-maheswar-reddy-979177345/"
-   target="_blank"
-   class="download-btn">
-LinkedIn Profile
-</a>
-
-<div class="separator"></div>
-
-<ul class="contacts-list">
-
-<li class="contact-item">
-<div class="contact-info">
-<p class="contact-title">Email</p>
-<a href="https://mail.google.com/mail/?view=cm&to=2300030990cseh1@gmail.com"
-   target="_blank"
-   class="contact-link">
-2300030990cseh1@gmail.com
-</a>
-</div>
-</li>
-
-<li class="contact-item">
-<div class="contact-info">
-<p class="contact-title">Phone</p>
-<a href="tel:+917671013478" class="contact-link">
-+91 7671013478
-</a>
-</div>
-</li>
-
-<li class="contact-item">
-<div class="contact-info">
-<p class="contact-title">GitHub</p>
-<a href="https://github.com/MaheswarReddyy"
-   target="_blank"
-   class="contact-link">
-github.com/MaheswarReddyy
-</a>
-</div>
-</li>
-
-<li class="contact-item">
-<div class="contact-info">
-<p class="contact-title">Location</p>
-<address>Vijayawada, Andhra Pradesh, India</address>
-</div>
-</li>
-
-</ul>
-
-</div>
-
-</aside>
-
-
-<div class="main-content">
-
-<nav class="navbar">
-
-<ul class="navbar-list">
-
-<li class="navbar-item">
-<button class="navbar-link active" data-nav-link>About</button>
-</li>
-
-<li class="navbar-item">
-<button class="navbar-link" data-nav-link>Resume</button>
-</li>
-
-<li class="navbar-item">
-<button class="navbar-link" data-nav-link>Certifications</button>
-</li>
-
-<li class="navbar-item">
-<button class="navbar-link" data-nav-link>Portfolio</button>
-</li>
-
-<li class="navbar-item">
-<button class="navbar-link" data-nav-link>Contact</button>
-</li>
-
-</ul>
-
-</nav>
-
-
-<article class="about active" data-page="about">
-
-<header>
-<h2 class="h2 article-title">About Me</h2>
-</header>
-
-<section class="about-text">
-
-<p>
-I am a Computer Science Engineering student at KL University with a strong
-interest in full stack web development and cloud technologies.
-</p>
-
-<p>
-I enjoy building scalable web applications using HTML, CSS, JavaScript,
-Node.js and deploying them using AWS cloud services.
-</p>
-
-</section>
-
-<section>
-
-<h3 class="h3 clients-title">Technologies I Use</h3>
-
-<div class="tech-stack">
-
-<a href="https://developer.mozilla.org/en-US/docs/Web/HTML"
-   target="_blank" rel="noopener noreferrer"
-   class="tech-badge">HTML</a>
-
-<a href="https://developer.mozilla.org/en-US/docs/Web/CSS"
-   target="_blank" rel="noopener noreferrer"
-   class="tech-badge">CSS</a>
-
-<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript"
-   target="_blank" rel="noopener noreferrer"
-   class="tech-badge">JavaScript</a>
-
-<a href="https://nodejs.org/en"
-   target="_blank" rel="noopener noreferrer"
-   class="tech-badge">Node.js</a>
-
-<a href="https://www.mongodb.com/docs/"
-   target="_blank" rel="noopener noreferrer"
-   class="tech-badge">MongoDB</a>
-
-<a href="https://aws.amazon.com/"
-   target="_blank" rel="noopener noreferrer"
-   class="tech-badge">AWS</a>
-
-</div>
-
-</section>
-
-<div class="availability-badge">
-  <span class="badge-dot"></span>
-  <div class="badge-text">
-    <strong>Open to Intern & Full Time</strong>
-    <span>Available Now</span>
+    <!-- Progress -->
+    <div class="progress-wrap">
+      <div class="progress-header">
+        <span class="progress-label">Initialising Portfolio</span>
+        <span class="progress-pct" id="pct">0%</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="progress-steps" id="steps"></div>
+    </div>
   </div>
 </div>
 
-<p class="portfolio-credit">
-  Designed & Built by G Naga Maheswar Reddy &nbsp;·&nbsp; 2026 &nbsp;·&nbsp; KL University &nbsp;·&nbsp; CSE
-</p>
-
-</article>
-
-
-<article class="resume" data-page="resume">
-
-<header>
-<h2 class="h2 article-title">Education</h2>
-</header>
-
-<section class="timeline">
-
-<ol class="timeline-list">
-
-<li class="timeline-item">
-
-<h4 class="h4 timeline-item-title">
-B.Tech in Computer Science Engineering
-</h4>
-
-<span>KL University | 2023 — 2027</span>
-
-<p class="timeline-text">
-CGPA: 8.8
-</p>
-
-</li>
-
-<li class="timeline-item">
-
-<h4 class="h4 timeline-item-title">
-Intermediate (MPC)
-</h4>
-
-<span>Sarada Educational Institution | 2023</span>
-
-<p class="timeline-text">
-Score: 8.91
-</p>
-
-</li>
-
-</ol>
-
-</section>
-
-<section class="skill">
-
-<h3 class="h3 skills-title">Skills</h3>
-
-<ul class="skills-list content-card">
-
-<li class="skills-item">
-<div class="title-wrapper">
-<h5 class="h5">HTML</h5>
-<data value="90">90%</data>
-</div>
-<div class="skill-progress-bg">
-<div class="skill-progress-fill" style="width: 90%;"></div>
-</div>
-</li>
-
-<li class="skills-item">
-<div class="title-wrapper">
-<h5 class="h5">C</h5>
-<data value="85">85%</data>
-</div>
-<div class="skill-progress-bg">
-<div class="skill-progress-fill" style="width: 85%;"></div>
-</div>
-</li>
-
-<li class="skills-item">
-<div class="title-wrapper">
-<h5 class="h5">Python</h5>
-<data value="80">80%</data>
-</div>
-<div class="skill-progress-bg">
-<div class="skill-progress-fill" style="width: 80%;"></div>
-</div>
-</li>
-
-<li class="skills-item">
-<div class="title-wrapper">
-<h5 class="h5">JavaScript</h5>
-<data value="85">85%</data>
-</div>
-<div class="skill-progress-bg">
-<div class="skill-progress-fill" style="width: 85%;"></div>
-</div>
-</li>
-
-<li class="skills-item">
-<div class="title-wrapper">
-<h5 class="h5">Node.js</h5>
-<data value="75">75%</data>
-</div>
-<div class="skill-progress-bg">
-<div class="skill-progress-fill" style="width: 75%;"></div>
-</div>
-</li>
-
-<li class="skills-item">
-<div class="title-wrapper">
-<h5 class="h5">AWS</h5>
-<data value="70">70%</data>
-</div>
-<div class="skill-progress-bg">
-<div class="skill-progress-fill" style="width: 70%;"></div>
-</div>
-</li>
-
-</ul>
-
-</section>
-
-<section class="languages">
-
-<h3 class="h3 languages-title">Languages</h3>
-
-<ul class="languages-list">
-
-<li class="languages-item">
-<div class="languages-info">
-<h5 class="h5">Telugu</h5>
-<span class="languages-level native">Native</span>
-</div>
-<div class="languages-bar-bg">
-<div class="languages-bar-fill" style="width: 100%;"></div>
-</div>
-</li>
-
-<li class="languages-item">
-<div class="languages-info">
-<h5 class="h5">English</h5>
-<span class="languages-level professional">Professional</span>
-</div>
-<div class="languages-bar-bg">
-<div class="languages-bar-fill" style="width: 85%;"></div>
-</div>
-</li>
-
-<li class="languages-item">
-<div class="languages-info">
-<h5 class="h5">Hindi</h5>
-<span class="languages-level conversational">Conversational</span>
-</div>
-<div class="languages-bar-bg">
-<div class="languages-bar-fill" style="width: 65%;"></div>
-</div>
-</li>
-
-</ul>
-
-</section>
-
-</article>
-
-
-<article class="certifications-page" data-page="certifications">
-
-<header>
-<h2 class="h2 article-title">Certifications</h2>
-</header>
-
-<section class="certifications">
-
-<ul class="certifications-list">
-
-<li class="certifications-item">
-<a href="https://learn.mongodb.com/c/wriYOFHZSfiKclGloTaRVg"
-   target="_blank"
-   rel="noopener noreferrer"
-   class="certifications-link">
-<div class="certifications-content">
-<h5 class="h5">MongoDB Certified Associate Developer</h5>
-<p>MongoDB Inc</p>
-</div>
-<span class="cert-arrow">↗</span>
-</a>
-</li>
-
-<li class="certifications-item">
-<a href="https://brm-certview.oracle.com/ords/certview/ecertificate?ssn=OC7493616&trackId=OCI25CAA&key=04dfd6ec64285147a8edacaf08b54b22c7f895b3"
-   target="_blank"
-   rel="noopener noreferrer"
-   class="certifications-link">
-<div class="certifications-content">
-<h5 class="h5">Oracle Cloud Infrastructure 2025 Certified Architect Associate</h5>
-<p>Oracle</p>
-</div>
-<span class="cert-arrow">↗</span>
-</a>
-</li>
-
-<li class="certifications-item">
-<a href="https://brm-certview.oracle.com/ords/certview/ecertificate?ssn=OC7493616&trackId=OCID25CP&key=7ac93e998449a8b215b1d3fdf01529be905aacb7"
-   target="_blank"
-   rel="noopener noreferrer"
-   class="certifications-link">
-<div class="certifications-content">
-<h5 class="h5">Oracle Cloud Infrastructure 2025 Certified Developer Professional</h5>
-<p>Oracle</p>
-</div>
-<span class="cert-arrow">↗</span>
-</a>
-</li>
-
-<li class="certifications-item">
-<a href="https://www.credly.com/badges/5ee2d0c9-d0f5-4989-8287-e46aab897b1c/linked_in_profile"
-   target="_blank"
-   rel="noopener noreferrer"
-   class="certifications-link">
-<div class="certifications-content">
-<h5 class="h5">Multicloud Network Associate</h5>
-<p>Aviatrix Certified Engineer</p>
-</div>
-<span class="cert-arrow">↗</span>
-</a>
-</li>
-
-<li class="certifications-item">
-<a href="./certifications/LinguaSkills.pdf"
-   target="_blank"
-   rel="noopener noreferrer"
-   class="certifications-link">
-<div class="certifications-content">
-<h5 class="h5">Cambridge Linguaskill English Test (CEFR B2)</h5>
-<p>Cambridge English</p>
-</div>
-<span class="cert-arrow">↗</span>
-</a>
-</li>
-
-</ul>
-
-</section>
-
-</article>
-
-
-<article class="portfolio" data-page="portfolio">
-
-<header>
-<h2 class="h2 article-title">Portfolio</h2>
-</header>
-
-<section class="projects">
-
-<ul class="project-list">
-
-<li class="project-item active">
-<a href="https://github.com/MaheswarReddyy/online-art-gallery"
-   target="_blank"
-   rel="noopener noreferrer">
-<figure class="project-img">
-<img src="./assets/images/project-1.jpg" alt="Online Art Gallery">
-</figure>
-<h3 class="project-title">
-Online Art Gallery Web Application
-</h3>
-<p class="project-category">
-Web Development
-</p>
-<span class="project-github-link">View on GitHub ↗</span>
-</a>
-</li>
-
-<li class="project-item active">
-<a href="https://github.com/MaheswarReddyy/aws-cloudfront-optimization"
-   target="_blank"
-   rel="noopener noreferrer">
-<figure class="project-img">
-<img src="./assets/images/project-2.jpg" alt="AWS CloudFront">
-</figure>
-<h3 class="project-title">
-Static Website Optimization Using AWS CloudFront
-</h3>
-<p class="project-category">
-Cloud
-</p>
-<span class="project-github-link">View on GitHub ↗</span>
-</a>
-</li>
-
-<li class="project-item active">
-<a href="https://github.com/MaheswarReddyy/portfolio"
-   target="_blank"
-   rel="noopener noreferrer">
-<figure class="project-img">
-<img src="./assets/images/project-3.jpg" alt="Portfolio Website">
-</figure>
-<h3 class="project-title">
-Personal Portfolio Website
-</h3>
-<p class="project-category">
-Web Development
-</p>
-<span class="project-github-link">View on GitHub ↗</span>
-</a>
-</li>
-
-</ul>
-
-</section>
-
-</article>
-
-
-<article class="contact" data-page="contact">
-
-<header>
-<h2 class="h2 article-title">Contact</h2>
-</header>
-
-<section class="mapbox">
-
-<iframe
-src="https://www.google.com/maps?q=Vijayawada&output=embed"
-loading="lazy">
-</iframe>
-
-</section>
-
-<section class="contact-form">
-
-<h3 class="h3 form-title">Contact Form</h3>
-
-<form class="form" data-form>
-
-<div class="input-wrapper">
-
-<input
-  type="text"
-  name="fullname"
-  class="form-input"
-  placeholder="Full name"
-  required
-  data-form-input>
-
-<input
-  type="email"
-  name="email"
-  class="form-input"
-  placeholder="Email address"
-  required
-  data-form-input>
-
-</div>
-
-<textarea
-  name="message"
-  class="form-input"
-  placeholder="Your Message"
-  required
-  data-form-input></textarea>
-
-<button class="form-btn" type="submit" data-form-btn disabled>
-Send Message
-</button>
-
-</form>
-
-</section>
-
-</article>
-
-</div>
-
-</main>
-
-<script src="./assets/js/script.js"></script>
-<script src="./assets/js/interactions.js"></script>
-
+<script>
+  // Create floating particles
+  const fp = document.getElementById('floatParticles');
+  for (let i = 0; i < 20; i++) {
+    const p = document.createElement('div');
+    p.className = 'fp';
+    const size = Math.random() * 4 + 1;
+    p.style.cssText = `
+      left:${Math.random()*100}%;
+      width:${size}px; height:${size}px;
+      opacity:${Math.random()*0.6+0.1};
+      animation-delay:${Math.random()*5}s;
+      animation-duration:${Math.random()*8+6}s;
+    `;
+    fp.appendChild(p);
+  }
+
+  // Progress steps
+  const stepLabels = ['HTML', 'CSS', 'JavaScript', 'Node.js', 'AWS', 'MongoDB'];
+  const stepsEl = document.getElementById('steps');
+  stepLabels.forEach(label => {
+    const s = document.createElement('span');
+    s.className = 'step-tag';
+    s.textContent = label;
+    stepsEl.appendChild(s);
+  });
+
+  // Animate progress
+  let progress = 0;
+  const fill = document.getElementById('progressFill');
+  const pct  = document.getElementById('pct');
+  const stepEls = stepsEl.querySelectorAll('.step-tag');
+
+  const interval = setInterval(() => {
+    // Variable speed — slow then fast
+    const increment = progress < 60
+      ? Math.random() * 3 + 1
+      : Math.random() * 6 + 3;
+    progress = Math.min(progress + increment, 100);
+
+    fill.style.width = progress + '%';
+    pct.textContent = Math.floor(progress) + '%';
+
+    // Activate step tags
+    const activeCount = Math.floor((progress / 100) * stepEls.length);
+    stepEls.forEach((s, i) => {
+      s.classList.toggle('active', i < activeCount);
+    });
+
+    if (progress >= 100) {
+      clearInterval(interval);
+      pct.textContent = '100%';
+      stepEls.forEach(s => s.classList.add('active'));
+
+      // Brief pause then exit
+      setTimeout(exitPreloader, 600);
+    }
+  }, 80);
+
+ function exitPreloader() {
+    const preloader = document.getElementById('preloader');
+    preloader.classList.add('exit');
+    setTimeout(() => {
+      preloader.style.display = 'none';
+      window.location.href = './portfolio.html';
+    }, 800);
+  }
+</script>
 </body>
 </html>
